@@ -1,13 +1,10 @@
 import numpy as np
 np.set_printoptions(threshold=np.nan)
 import Utility
-import logging
 from multiprocessing.dummy import Pool
 from Population import hopfieldPopulation
 
 verbose=False
-logging.basicConfig(level=logging.INFO)
-
 v_print = print if verbose else lambda *a, **k: None
 
 
@@ -29,7 +26,6 @@ class network:
             self._uweights = np.zeros((size,size), dtype=np.float64)
         
         v_print("Network initialized")
-        logging.info("Network state: {}".format(self.units))
     
     def _learn_(self, learning_rule, *args):
         if len(args)==0:
@@ -111,8 +107,6 @@ class network:
                 p[p==0]=-1
                 return p
             patterns = [ran() for i in range(nb)]
-            logging.info("One of the patterns generated: {}"
-                         .format(patterns[0]))
             v_print("Learning generated patterns")
             
             if len(self.learnt_patterns)==0 and learning_rule=='ortho_hebb':
@@ -126,9 +120,7 @@ class network:
 #    """returns the action potential of the specified neuron"""
 #    def action_potential_obsolete(self, neuron_index):
 #        w = self.get_weights()
-#        logging.info("Taking dot product of {} AND {}".format(w[neuron_index,:], self.units))
 #        h = np.dot(w[neuron_index,:], self.units)
-#        logging.info("Action potential for {}th neuron ={}".format(neuron_index,h))
 #        return h
     
     
@@ -141,7 +133,6 @@ class network:
         ap = np.matmul(self.get_weights(), self.units)
         self.units.update(ap, update_type)
         v_print("Update complete")
-        logging.info("Updated network state: {}".format(self.units))
           
     def update_all_parallel_todo(self, update_type='simultaneous'):
         if update_type=='simultaneous':
@@ -154,7 +145,6 @@ class network:
             pool = Pool(4)
             new_units = pool.map(update_unit, list(enumerate(new_units)))
             self.units= new_units
-            logging.info("Updated network state: {}".format(self.units))
             
     
     def correlation(self, with_learnt_pattern=True, pattern_index=0,
