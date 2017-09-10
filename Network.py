@@ -7,7 +7,6 @@ from Population import hopfieldPopulation
 
 verbose=False
 logging.basicConfig(level=logging.INFO)
-logger= logging.getLogger()
 
 v_print = print if verbose else lambda *a, **k: None
 
